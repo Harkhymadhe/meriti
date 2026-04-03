@@ -1,0 +1,17 @@
+project: meriti
+entity: harkhymadhe
+program: src/main.py
+method: grid
+metric:
+  goal: minimize
+  name: train/loss
+parameters:
+  data.pixel_fraction:
+    values: [0.1, 0.2, 0.3, 0.4, 0.5]
+  training.loss.pce.gamma:
+    values: [1.0, 2.0, 3.0]
+command:
+  - ${env}
+  - python
+  - ${program}
+  - ${args_no_hyphens}

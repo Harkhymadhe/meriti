@@ -1,0 +1,12 @@
+.idea/
+dataset/
+.ruff_cache/
+wandb/
+__pycache__/
+nsys_profiles/
+*egg-info/
+pretrained/
+experiments/
+cv/
+outputs/
+sweep.log

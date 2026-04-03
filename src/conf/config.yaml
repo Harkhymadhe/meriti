@@ -1,0 +1,73 @@
+hydra:
+  job:
+    chdir: true
+wandb:
+  entity: harkhymadhe
+  project: meriti
+  mode: online
+reproducibility:
+  cudnn_deterministic: false
+  cudnn_benchmark: true
+  seed: 42
+model:
+  num_blocks: 4
+  in_channels: 3
+  out_channels: 512
+  kernel_size: 3
+  padding: 0
+  stride: 1
+  dilation: 1
+  dropout: 0.0
+  bias: false
+  match_dims: true
+  freeze_encoder: false # TODO: Experiment with this (original: true)
+  backbone: resnet18
+  encoder_weights: imagenet
+  checkpoint: 2
+  smp: false
+data:
+  # path: ${hydra:runtime.cwd}/dataset/FloodNet/FloodNet-Supervised_v1.0
+  path: ${hydra:runtime.cwd}/dataset/data_mount
+  # path: ~/flood_data.squashfs
+  num_classes: 10
+  image:
+    size:
+      height: 512
+      width: 512
+  mask:
+    size:
+      height: 324
+      width: 324
+  augment: false
+  pixel_fraction: .5
+training:
+  num_epochs: 5 # TODO: Experiment with this (original: 10)
+  max_gradient_norm: 1.0
+  device: cuda
+  data:
+    batch_size: 16 # TODO: Experiment with batch size (original: 16)
+    num_workers: 4
+    pin_memory: true
+    prefetch_factor: 4 # TODO: Experiment with this (original: 2)
+  optimizer:
+    weight_decay: 1e-2
+    beta1: .9
+    beta2: .999
+  lr:
+    base_lr:  3e-4 # TODO: Experiment with this (original: 1e-4)
+    encoder_lr: 1e-4 # TODO: Experiment with this (original: 1e-4)
+    bottleneck_lr: 1e-4 # TODO: Experiment with this (original: 1e-4)
+    decoder_lr: 2e-4 # TODO: Experiment with this (original: 1e-4)
+  loss:
+    dice:
+      weight: 1.0
+      reduction: mean
+    pce:
+      weight: 1.0
+      reduce: true
+      alpha: 0.25
+      gamma: 2.0 # TODO: Experiment with this (original: 0.)
+runs:
+  path: ${hydra:runtime.output_dir}/runs
+logs:
+  path: ${hydra:runtime.output_dir}/main.log
