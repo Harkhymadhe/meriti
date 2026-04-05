@@ -30,6 +30,7 @@ Meriti is a deep learning project focused on remote sensing image segmentation, 
     - [Profiling](#profiling)
     - [Makefile](#makefile)
   - [📂 Project Structure](#-project-structure)
+  - [📄 Logs and Results](#-logs-and-results)
   - [⚖️ License](#️-license)
 
 ## ✨ Features
@@ -139,6 +140,10 @@ This will generate an Nvidia Nsight Systems report file (.nsys-rep), which can b
 ├── sweep.sh                  # Bash script for setting up W&B sweeps
 └── sweep.yaml                # Experimental sweep configurations for hyperparametric optimization
 ```
+
+## 📄 Logs and Results
+
+The generated logs from experimentation can be found on W\&B: [https://wandb.ai/harkhymadhe/meriti](https://wandb.ai/harkhymadhe/meriti)
 
 ## ⚖️ License
 
