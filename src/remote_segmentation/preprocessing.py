@@ -3,6 +3,10 @@
 import torch
 import torchvision.transforms as T
 
+from typing import Optional
+
+from torch import nn
+
 from remote_segmentation.dataset import FloodSegmentationDataset
 
 __all__ = [
@@ -119,7 +123,9 @@ class RandomHistogramMatchingTransformerV2(nn.Module):
         return target_images
 
     @torch.inference_mode()
-    def forward(self, source_images: torch.Tensor, target_images: Optional[torch.Tensor]=None) -> torch.Tensor:
+    def forward(
+        self, source_images: torch.Tensor, target_images: Optional[torch.Tensor] = None
+    ) -> torch.Tensor:
         """
         source_images: Tensor of shape [B, C, H, W]
         """
