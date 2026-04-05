@@ -5,10 +5,14 @@ import torchvision.transforms as T
 
 from remote_segmentation.dataset import FloodSegmentationDataset
 
-__all__ = ["RandomHistogramMatchingTransformer"]
+__all__ = [
+    "RandomHistogramMatchingTransformerV1",
+    "RandomHistogramMatchingTransformerV2",
+    "RandomHistogramMatchingTransformer",
+]
 
 
-class RandomHistogramMatchingTransformer(torch.nn.Module):
+class RandomHistogramMatchingTransformerV1(torch.nn.Module):
     def __init__(self, target_dataset):
         super(RandomHistogramMatchingTransformer, self).__init__()
 
@@ -100,61 +104,68 @@ class RandomHistogramMatchingTransformer(torch.nn.Module):
             image.save(f"image_{i}.png")
 
 
-# TODO: Obtained from Gemini. Cross-check this!
-# class RandomHistogramMatchingTransformer(nn.Module):
-#     def __init__(self, target_dataset):
-#         super(RandomHistogramMatchingTransformer, self).__init__()
-#         self.target_dataset = target_dataset
+class RandomHistogramMatchingTransformerV2(nn.Module):
+    def __init__(self, target_dataset):
+        super(RandomHistogramMatchingTransformer, self).__init__()
+        self.target_dataset = target_dataset
 
-#     def sample_target_images(self, num_images):
-#         # Efficiently sample a batch from the target dataset
-#         indices = torch.randint(low=0, high=len(self.target_dataset), size=(num_images,))
-#         # Assuming target_dataset returns a tensor or can be indexed by a list
-#         target_images = torch.stack([self.target_dataset[i][0] for i in indices])
-#         return target_images
+    def sample_target_images(self, num_images: torch.Tensor) -> torch.Tensor:
+        # Efficiently sample a batch from the target dataset
+        indices = torch.randint(
+            low=0, high=len(self.target_dataset), size=(num_images,)
+        )
+        # Assuming target_dataset returns a tensor or can be indexed by a list
+        target_images = torch.stack([self.target_dataset[i][0] for i in indices])
+        return target_images
 
-#     @torch.inference_mode()
-#     def forward(self, source_images, target_images=None):
-#         """
-#         source_images: Tensor of shape [B, C, H, W]
-#         """
-#         B, C, H, W = source_images.shape
+    @torch.inference_mode()
+    def forward(self, source_images: torch.Tensor, target_images: Optional[torch.Tensor]=None) -> torch.Tensor:
+        """
+        source_images: Tensor of shape [B, C, H, W]
+        """
+        B, C, H, W = source_images.shape
 
-#         if target_images is None:
-#             target_images = self.sample_target_images(num_images=B).to(source_images.device)
+        if target_images is None:
+            target_images = self.sample_target_images(num_images=B).to(
+                source_images.device
+            )
 
-#         # Ensure target_images matches source batch size
-#         if target_images.shape[0] != B:
-#             # Simple tile/truncate logic to match batch sizes
-#             target_images = target_images.repeat((B // target_images.shape[0]) + 1, 1, 1, 1)[:B]
+        # Ensure target_images matches source batch size
+        if target_images.shape[0] != B:
+            # Simple tile/truncate logic to match batch sizes
+            target_images = target_images.repeat(
+                (B // target_images.shape[0]) + 1, 1, 1, 1
+            )[:B]
 
-#         # 1. Flatten for batch processing: [B, C, N]
-#         source_flat = source_images.view(B, C, -1)
-#         target_flat = target_images.view(B, C, -1)
+        # 1. Flatten for batch processing: [B, C, N]
+        source_flat = source_images.view(B, C, -1)
+        target_flat = target_images.view(B, C, -1)
 
-#         # 2. Sort both to get the distribution "templates"
-#         # We need the values in order to map percentiles
-#         source_sorted, source_indices = torch.sort(source_flat, dim=-1)
-#         target_sorted, _ = torch.sort(target_flat, dim=-1)
+        # 2. Sort both to get the distribution "templates"
+        # We need the values in order to map percentiles
+        source_sorted, source_indices = torch.sort(source_flat, dim=-1)
+        target_sorted, _ = torch.sort(target_flat, dim=-1)
 
-#         # 3. Use the sorted target as a look-up table.
-#         # Since source_sorted is the sorted version of source_flat,
-#         # we can directly map the ranks.
-#         # 'target_sorted' now contains the values we WANT at each rank.
+        # 3. Use the sorted target as a look-up table.
+        # Since source_sorted is the sorted version of source_flat,
+        # we can directly map the ranks.
+        # 'target_sorted' now contains the values we WANT at each rank.
 
-#         # To handle the mapping back to the original pixel positions:
-#         # We create an empty tensor and scatter the target values into source positions
-#         matched_flat = torch.zeros_like(source_flat)
-#         matched_flat.scatter_(dim=-1, index=source_indices, src=target_sorted)
+        # To handle the mapping back to the original pixel positions:
+        # We create an empty tensor and scatter the target values into source positions
+        matched_flat = torch.zeros_like(source_flat)
+        matched_flat.scatter_(dim=-1, index=source_indices, src=target_sorted)
 
-#         return matched_flat.view(B, C, H, W)
+        return matched_flat.view(B, C, H, W)
 
-#     def save_images(self, tensor_batch, prefix="image"):
-#         # Helper to save results
-#         for i, img_tensor in enumerate(tensor_batch):
-#             img = T.ToPILImage()(img_tensor.cpu())
-#             img.save(f"{prefix}_{i}.png")
+    def save_images(self, tensor_batch: torch.Tensor, prefix: str = "image"):
+        # Helper to save results
+        for i, img_tensor in enumerate(tensor_batch):
+            img = T.ToPILImage()(img_tensor.cpu())
+            img.save(f"{prefix}_{i}.png")
 
+
+RandomHistogramMatchingTransformer = RandomHistogramMatchingTransformerV1
 
 if __name__ == "__main__":
     import os

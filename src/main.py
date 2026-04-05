@@ -4,6 +4,7 @@ import os
 import time
 
 import matplotlib
+
 matplotlib.use("Agg")
 
 import matplotlib.pyplot as plt
@@ -321,7 +322,9 @@ def main(cfg: DictConfig):
                 plt.ylabel("Pixel Class Accuracy")
                 train_acc_bar_plot = plt.gcf()
 
-                train_class_proportion_ = train_metric.to_frequency(true_labels=True).cpu()
+                train_class_proportion_ = train_metric.to_frequency(
+                    true_labels=True
+                ).cpu()
                 train_class_pred_proportion_ = train_metric.to_frequency(
                     true_labels=False
                 ).cpu()
@@ -404,7 +407,9 @@ def main(cfg: DictConfig):
                     plt.ylabel("Pixel Class Accuracy")
                     val_acc_bar_plot = plt.gcf()
 
-                    val_class_proportion_ = val_metric.to_frequency(true_labels=True).cpu()
+                    val_class_proportion_ = val_metric.to_frequency(
+                        true_labels=True
+                    ).cpu()
                     val_class_pred_proportion_ = val_metric.to_frequency(
                         true_labels=False
                     ).cpu()
@@ -472,10 +477,14 @@ def main(cfg: DictConfig):
 
             #### Get class proportions for both true and predicted classes in train and val splits
             if epoch == 1:
-                train_class_proportion = train_metric.to_frequency(true_labels=True).cpu()
+                train_class_proportion = train_metric.to_frequency(
+                    true_labels=True
+                ).cpu()
                 val_class_proportion = val_metric.to_frequency(true_labels=True).cpu()
 
-            train_class_pred_proportion = train_metric.to_frequency(true_labels=False).cpu()
+            train_class_pred_proportion = train_metric.to_frequency(
+                true_labels=False
+            ).cpu()
             val_class_pred_proportion = val_metric.to_frequency(true_labels=False).cpu()
 
             # #### -----------------------------------
@@ -589,7 +598,7 @@ def main(cfg: DictConfig):
         }
 
         torch.save(checkpoint, f"{checkpoint_dir}/final_checkpoint.pt")
-    
+
     plt.close("all")
 
 
