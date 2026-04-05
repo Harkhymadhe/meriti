@@ -6,7 +6,7 @@ nsys profile --capture-range=cudaProfilerApi \
     --output=~/nsys_profiles/report \
     --wait=primary --sample=none --stop-on-exit=true\
     --delay=10 --pytorch=autograd-shapes-nvtx \
-    --backtrace=none python3 src/main_nvtx2.py
+    --backtrace=none python3 src/main_nvtx.py
     # --python-sampling=true --duration=10 --backtrace=none python3 src/main.py
 
 
