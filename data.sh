@@ -1,17 +1,30 @@
 #!/bin/sh
 
-# Update system
-sudo apt-get update
+# # Update system
+# sudo apt-get update
 
-# Install squashfs
-sudo apt-get install squashfs-tools
+# # Install squashfs
+# sudo apt-get install squashfs-tools
 
-# Create squashfs dataset
-# mksquashfs ./dataset/FloodNet/FloodNet-Supervised_v1.0 ~/flood_data.squashfs -comp zstd
-mksquashfs ./dataset/FloodNet/FloodNet-Supervised_v1.0 ~/flood_data.squashfs
+MOUNT_DIR=./dataset/data_mount
+SQUASHFS_FILE=~/flood_data.squashfs
 
-# Create mount point
-mkdir -p ./dataset/data_mount
+CREATE_MOUNT=$(findmnt -M $MOUNT_DIR && echo 0 || echo 1)
+CREATE_SQUASHFS=$(test -e $SQUASHFS_FILE && echo 0 || echo 1)
 
-# Mount squashfs dataset
-sudo mount -t squashfs ~/flood_data.squashfs ./dataset/data_mount
+echo "Create SQUASHFS file?: $CREATE_SQUASHFS"
+echo "Create mount point?: $CREATE_MOUNT"
+
+
+if [ $CREATE_SQUASHFS ]; then
+    # Create squashfs dataset
+    mksquashfs ./dataset/FloodNet/FloodNet-Supervised_v1.0 $SQUASHFS_FILE
+fi
+
+if [ $CREATE_MOUNT ]; then
+    # Create mount point
+    mkdir -p $MOUNT_DIR
+    
+    # Mount squashfs dataset
+    sudo mount -t squashfs $SQUASHFS_FILE $MOUNT_DIR
+fi

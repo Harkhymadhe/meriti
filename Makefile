@@ -14,6 +14,7 @@ extract:
 	@echo
 
 run:
+	@./data.sh
 	@SWEEP_CONFIG=$$(./sweep.sh)
 	@wandb agent "$$SWEEP_CONFIG"
 	@echo
