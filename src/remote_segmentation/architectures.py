@@ -207,8 +207,6 @@ class Resnet(nn.Module):
 
         assert len(num_blocks_per_layer) == 4, "Model can only contain four layers!"
 
-        self.num_blocks_per_layer = num_blocks_per_layer
-
         num_base_channels = out_channels // 2 ** (len(num_blocks_per_layer) - 1)
 
         self.pre_block = nn.Sequential(
@@ -286,35 +284,43 @@ class Resnet(nn.Module):
         self.pre_block[1].bias = weights["bn1.bias"]
         self.pre_block[1].running_var = weights["bn1.running_var"]
         self.pre_block[1].running_mean = weights["bn1.running_mean"]
-        
-        num_layer1_blocks, num_layer2_blocks, num_layer3_blocks, num_layer4_blocks = self.num_blocks_per_layer
 
         ### Layer 1
 
-        for i in range(num_layer1_blocks):
-            self.layer1.blocks[i].conv1.weight = weights[f"layer1.{i}.conv1.weight"]
-            self.layer1.blocks[i].conv2.weight = weights[f"layer1.{i}.conv2.weight"]
-            self.layer1.blocks[i].bn1.weight = weights[f"layer1.{i}.bn1.weight"]
-            self.layer1.blocks[i].bn1.bias = weights[f"layer1.{i}.bn1.bias"]
-            self.layer1.blocks[i].bn1.running_var = weights[f"layer1.{i}.bn1.running_var"]
-            self.layer1.blocks[i].bn1.running_mean = weights[f"layer1.{i}.bn1.running_mean"]
-            self.layer1.blocks[i].bn2.weight = weights[f"layer1.{i}.bn2.weight"]
-            self.layer1.blocks[i].bn2.bias = weights[f"layer1.{i}.bn2.bias"]
-            self.layer1.blocks[i].bn2.running_var = weights[f"layer1.{i}.bn2.running_var"]
-            self.layer1.blocks[i].bn2.running_mean = weights[f"layer1.{i}.bn2.running_mean"]
+        self.layer1.blocks[0].conv1.weight = weights["layer1.0.conv1.weight"]
+        self.layer1.blocks[0].conv2.weight = weights["layer1.0.conv2.weight"]
+        self.layer1.blocks[0].bn1.weight = weights["layer1.0.bn1.weight"]
+        self.layer1.blocks[0].bn1.bias = weights["layer1.0.bn1.bias"]
+        self.layer1.blocks[0].bn1.running_var = weights["layer1.0.bn1.running_var"]
+        self.layer1.blocks[0].bn1.running_mean = weights["layer1.0.bn1.running_mean"]
+        self.layer1.blocks[0].bn2.weight = weights["layer1.0.bn2.weight"]
+        self.layer1.blocks[0].bn2.bias = weights["layer1.0.bn2.bias"]
+        self.layer1.blocks[0].bn2.running_var = weights["layer1.0.bn2.running_var"]
+        self.layer1.blocks[0].bn2.running_mean = weights["layer1.0.bn2.running_mean"]
+
+        self.layer1.blocks[1].conv1.weight = weights["layer1.1.conv1.weight"]
+        self.layer1.blocks[1].conv2.weight = weights["layer1.1.conv2.weight"]
+        self.layer1.blocks[1].bn1.weight = weights["layer1.1.bn1.weight"]
+        self.layer1.blocks[1].bn1.bias = weights["layer1.1.bn1.bias"]
+        self.layer1.blocks[1].bn1.running_var = weights["layer1.1.bn1.running_var"]
+        self.layer1.blocks[1].bn1.running_mean = weights["layer1.1.bn1.running_mean"]
+        self.layer1.blocks[1].bn2.weight = weights["layer1.1.bn2.weight"]
+        self.layer1.blocks[1].bn2.bias = weights["layer1.1.bn2.bias"]
+        self.layer1.blocks[1].bn2.running_var = weights["layer1.1.bn2.running_var"]
+        self.layer1.blocks[1].bn2.running_mean = weights["layer1.1.bn2.running_mean"]
 
         ### Layer 2
-        for i in range(num_layer2_blocks):
-            self.layer2.blocks[i].conv1.weight = weights[f"layer2.{i}.conv1.weight"]
-            self.layer2.blocks[i].conv2.weight = weights[f"layer2.{i}.conv2.weight"]
-            self.layer2.blocks[i].bn1.weight = weights[f"layer2.{i}.bn1.weight"]
-            self.layer2.blocks[i].bn1.bias = weights[f"layer2.{i}.bn1.bias"]
-            self.layer2.blocks[i].bn1.running_var = weights[f"layer2.{i}.bn1.running_var"]
-            self.layer2.blocks[i].bn1.running_mean = weights[f"layer2.{i}.bn1.running_mean"]
-            self.layer2.blocks[i].bn2.weight = weights[f"layer2.{i}.bn2.weight"]
-            self.layer2.blocks[i].bn2.bias = weights[f"layer2.{i}.bn2.bias"]
-            self.layer2.blocks[i].bn2.running_var = weights[f"layer2.{i}.bn2.running_var"]
-            self.layer2.blocks[i].bn2.running_mean = weights[f"layer2.{i}.bn2.running_mean"]
+
+        self.layer2.blocks[0].conv1.weight = weights["layer2.0.conv1.weight"]
+        self.layer2.blocks[0].conv2.weight = weights["layer2.0.conv2.weight"]
+        self.layer2.blocks[0].bn1.weight = weights["layer2.0.bn1.weight"]
+        self.layer2.blocks[0].bn1.bias = weights["layer2.0.bn1.bias"]
+        self.layer2.blocks[0].bn1.running_var = weights["layer2.0.bn1.running_var"]
+        self.layer2.blocks[0].bn1.running_mean = weights["layer2.0.bn1.running_mean"]
+        self.layer2.blocks[0].bn2.weight = weights["layer2.0.bn2.weight"]
+        self.layer2.blocks[0].bn2.bias = weights["layer2.0.bn2.bias"]
+        self.layer2.blocks[0].bn2.running_var = weights["layer2.0.bn2.running_var"]
+        self.layer2.blocks[0].bn2.running_mean = weights["layer2.0.bn2.running_mean"]
 
         self.layer2.blocks[0].downsample[0].weight = weights[
             "layer2.0.downsample.0.weight"
@@ -330,18 +336,29 @@ class Resnet(nn.Module):
             "layer2.0.downsample.1.running_mean"
         ]
 
+        self.layer2.blocks[1].conv1.weight = weights["layer2.1.conv1.weight"]
+        self.layer2.blocks[1].conv2.weight = weights["layer2.1.conv2.weight"]
+        self.layer2.blocks[1].bn1.weight = weights["layer2.1.bn1.weight"]
+        self.layer2.blocks[1].bn1.bias = weights["layer2.1.bn1.bias"]
+        self.layer2.blocks[1].bn1.running_var = weights["layer2.1.bn1.running_var"]
+        self.layer2.blocks[1].bn1.running_mean = weights["layer2.1.bn1.running_mean"]
+        self.layer2.blocks[1].bn2.weight = weights["layer2.1.bn2.weight"]
+        self.layer2.blocks[1].bn2.bias = weights["layer2.1.bn2.bias"]
+        self.layer2.blocks[1].bn2.running_var = weights["layer2.1.bn2.running_var"]
+        self.layer2.blocks[1].bn2.running_mean = weights["layer2.1.bn2.running_mean"]
+
         ### Layer 3
-        for i in range(num_layer3_blocks):
-            self.layer3.blocks[i].conv1.weight = weights[f"layer3.{i}.conv1.weight"]
-            self.layer3.blocks[i].conv2.weight = weights[f"layer3.{i}.conv2.weight"]
-            self.layer3.blocks[i].bn1.weight = weights[f"layer3.{i}.bn1.weight"]
-            self.layer3.blocks[i].bn1.bias = weights[f"layer3.{i}.bn1.bias"]
-            self.layer3.blocks[i].bn1.running_var = weights[f"layer3.{i}.bn1.running_var"]
-            self.layer3.blocks[i].bn1.running_mean = weights[f"layer3.{i}.bn1.running_mean"]
-            self.layer3.blocks[i].bn2.weight = weights[f"layer3.{i}.bn2.weight"]
-            self.layer3.blocks[i].bn2.bias = weights[f"layer3.{i}.bn2.bias"]
-            self.layer3.blocks[i].bn2.running_var = weights[f"layer3.{i}.bn2.running_var"]
-            self.layer3.blocks[i].bn2.running_mean = weights[f"layer3.{i}.bn2.running_mean"]
+
+        self.layer3.blocks[0].conv1.weight = weights["layer3.0.conv1.weight"]
+        self.layer3.blocks[0].conv2.weight = weights["layer3.0.conv2.weight"]
+        self.layer3.blocks[0].bn1.weight = weights["layer3.0.bn1.weight"]
+        self.layer3.blocks[0].bn1.bias = weights["layer3.0.bn1.bias"]
+        self.layer3.blocks[0].bn1.running_var = weights["layer3.0.bn1.running_var"]
+        self.layer3.blocks[0].bn1.running_mean = weights["layer3.0.bn1.running_mean"]
+        self.layer3.blocks[0].bn2.weight = weights["layer3.0.bn2.weight"]
+        self.layer3.blocks[0].bn2.bias = weights["layer3.0.bn2.bias"]
+        self.layer3.blocks[0].bn2.running_var = weights["layer3.0.bn2.running_var"]
+        self.layer3.blocks[0].bn2.running_mean = weights["layer3.0.bn2.running_mean"]
 
         self.layer3.blocks[0].downsample[0].weight = weights[
             "layer3.0.downsample.0.weight"
@@ -357,18 +374,29 @@ class Resnet(nn.Module):
             "layer3.0.downsample.1.running_mean"
         ]
 
+        self.layer3.blocks[1].conv1.weight = weights["layer3.1.conv1.weight"]
+        self.layer3.blocks[1].conv2.weight = weights["layer3.1.conv2.weight"]
+        self.layer3.blocks[1].bn1.weight = weights["layer3.1.bn1.weight"]
+        self.layer3.blocks[1].bn1.bias = weights["layer3.1.bn1.bias"]
+        self.layer3.blocks[1].bn1.running_var = weights["layer3.1.bn1.running_var"]
+        self.layer3.blocks[1].bn1.running_mean = weights["layer3.1.bn1.running_mean"]
+        self.layer3.blocks[1].bn2.weight = weights["layer3.1.bn2.weight"]
+        self.layer3.blocks[1].bn2.bias = weights["layer3.1.bn2.bias"]
+        self.layer3.blocks[1].bn2.running_var = weights["layer3.1.bn2.running_var"]
+        self.layer3.blocks[1].bn2.running_mean = weights["layer3.1.bn2.running_mean"]
+
         ### Layer 4
-        for i in range(num_layer4_blocks):
-            self.layer4.blocks[i].conv1.weight = weights[f"layer4.{i}.conv1.weight"]
-            self.layer4.blocks[i].conv2.weight = weights[f"layer4.{i}.conv2.weight"]
-            self.layer4.blocks[i].bn1.weight = weights[f"layer4.{i}.bn1.weight"]
-            self.layer4.blocks[i].bn1.bias = weights[f"layer4.{i}.bn1.bias"]
-            self.layer4.blocks[i].bn1.running_var = weights[f"layer4.{i}.bn1.running_var"]
-            self.layer4.blocks[i].bn1.running_mean = weights[f"layer4.{i}.bn1.running_mean"]
-            self.layer4.blocks[i].bn2.weight = weights[f"layer4.{i}.bn2.weight"]
-            self.layer4.blocks[i].bn2.bias = weights[f"layer4.{i}.bn2.bias"]
-            self.layer4.blocks[i].bn2.running_var = weights[f"layer4.{i}.bn2.running_var"]
-            self.layer4.blocks[i].bn2.running_mean = weights[f"layer4.{i}.bn2.running_mean"]
+
+        self.layer4.blocks[0].conv1.weight = weights["layer4.0.conv1.weight"]
+        self.layer4.blocks[0].conv2.weight = weights["layer4.0.conv2.weight"]
+        self.layer4.blocks[0].bn1.weight = weights["layer4.0.bn1.weight"]
+        self.layer4.blocks[0].bn1.bias = weights["layer4.0.bn1.bias"]
+        self.layer4.blocks[0].bn1.running_var = weights["layer4.0.bn1.running_var"]
+        self.layer4.blocks[0].bn1.running_mean = weights["layer4.0.bn1.running_mean"]
+        self.layer4.blocks[0].bn2.weight = weights["layer4.0.bn2.weight"]
+        self.layer4.blocks[0].bn2.bias = weights["layer4.0.bn2.bias"]
+        self.layer4.blocks[0].bn2.running_var = weights["layer4.0.bn2.running_var"]
+        self.layer4.blocks[0].bn2.running_mean = weights["layer4.0.bn2.running_mean"]
 
         self.layer4.blocks[0].downsample[0].weight = weights[
             "layer4.0.downsample.0.weight"
@@ -383,6 +411,17 @@ class Resnet(nn.Module):
         self.layer4.blocks[0].downsample[1].running_mean = weights[
             "layer4.0.downsample.1.running_mean"
         ]
+
+        self.layer4.blocks[1].conv1.weight = weights["layer4.1.conv1.weight"]
+        self.layer4.blocks[1].conv2.weight = weights["layer4.1.conv2.weight"]
+        self.layer4.blocks[1].bn1.weight = weights["layer4.1.bn1.weight"]
+        self.layer4.blocks[1].bn1.bias = weights["layer4.1.bn1.bias"]
+        self.layer4.blocks[1].bn1.running_var = weights["layer4.1.bn1.running_var"]
+        self.layer4.blocks[1].bn1.running_mean = weights["layer4.1.bn1.running_mean"]
+        self.layer4.blocks[1].bn2.weight = weights["layer4.1.bn2.weight"]
+        self.layer4.blocks[1].bn2.bias = weights["layer4.1.bn2.bias"]
+        self.layer4.blocks[1].bn2.running_var = weights["layer4.1.bn2.running_var"]
+        self.layer4.blocks[1].bn2.running_mean = weights["layer4.1.bn2.running_mean"]
 
         return self
 
