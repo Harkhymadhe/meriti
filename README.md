@@ -26,8 +26,6 @@ Meriti is a deep learning project focused on remote sensing image segmentation, 
   - [🛠️ Tech Stack](#️-tech-stack)
   - [📦 Installation](#-installation)
   - [🚀 Usage](#-usage)
-    - [💾 Dataset](#-dataset)
-    - [⚙️ Configuration](#️-configuration)
     - [Run Experiments](#run-experiments)
     - [Profiling](#profiling)
     - [Makefile](#makefile)
@@ -71,31 +69,6 @@ uv pip install -e .
 
 The primary entry point for running the experiments is `src/main.py`. However, these experiments are designed using sweeps from Weights & Biases, and running them can be quite involved. This is automated and abstracted away via a Makefile.
 
-### 💾 Dataset
-
-> [!Important]
- > The dataset can be obtained from this DropBox [web link](https://www.dropbox.com/scl/fo/k33qdif15ns2qv2jdxvhx/ANGaa8iPRhvlrvcKXjnmNRc?rlkey=ao2493wzl1cltonowjdbrnp7f&e=5&dl=0). Be sure to store it  in the `./dataset/` directory according to the folder structure provided in `src/conf/config.yaml`.
-
-### ⚙️ Configuration
-
-Personal customization of the configuration for both the model, data, and training process can be achieved by modifying the `src/conf/config.yaml` file.
-
-> [!Important]
- > To leverage transfer learning for training, be sure to download the pretrained model and put it in the `src/remote_segmentation/pretrained/`
- > More information is available at the TorchVision [documentation](https://pytorch.org/vision/stable/_modules/torchvision/models/resnet.html).
- > Specific download links may be found in the table below:
-
-| Model Architecture | Layers | Parameters | ImageNet Accuracy (Top-1/Top-5) | Download Link                                                                        |
-|--------------------|--------|------------|---------------------------------|--------------------------------------------------------------------------------------|
-| ResNet18           |  18    |   11.69M   |         69.76% / 89.08%         | [resnet18-f37072fd.pth](https://download.pytorch.org/models/resnet18-f37072fd.pth)   |
-| ResNet34           |  34    |   21.80M   |         73.31% / 91.42%         | [resnet34-b627a593.pth](https://download.pytorch.org/models/resnet34-b627a593.pth)   |
-| ResNet50           |  50    |   25.56M   |         80.86% / 95.43%         | [resnet50-11ad3fa6.pth](https://download.pytorch.org/models/resnet50-11ad3fa6.pth)   |
-| ResNet101          |  101   |   44.55M   |         81.89% / 95.78%         | [resnet101-cd907fc2.pth](https://download.pytorch.org/models/resnet101-cd907fc2.pth) |
-| ResNet152          |  152   |   60.19M   |         82.28% / 96.00%         | [resnet152-f82ba261.pth](https://download.pytorch.org/models/resnet152-f82ba261.pth) |
-
-> [!Note]
- > Presently, support is only available for ResNet18, ResNet34, and ResNet50. Future iterations will improve on this.
-
 ### Run Experiments
 
 To start and run the experiments, simply execute the Makefile via one of the commands below:
@@ -109,8 +82,6 @@ make
 # Ensure your config.yaml is updated in src/conf/
 make all
 ```
-
-The experimental run artifacts are persisted to the `./outputs` directory.
 
 ### Profiling
 
